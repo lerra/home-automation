@@ -1,0 +1,69 @@
+esphome:
+  name: coffemachine
+  platform: ESP32
+  board: esp32dev
+
+wifi:
+  ssid: "your-wifi"
+  password: "your-password"
+  manual_ip:
+    # Set this to the IP of the ESP
+    static_ip: 1.2.3.4
+    # Set this to the IP address of the router. Often ends with .1
+    gateway: 1.2.3.1
+    # The subnet of the network. 255.255.255.0 works for most home networks.
+    subnet: 255.255.255.0
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: "change-me"
+
+ota:
+  password: "change-me-2"
+
+binary_sensor:
+  - platform: gpio
+    pin: GPIO23
+    id: coffee_machine_water_sensor
+    name: "Coffee machine Non-contact liquid level sensor"
+
+switch:
+- platform: gpio
+  id: coffe_on_button
+  pin: GPIO27
+  restore_mode: ALWAYS_OFF
+  inverted: yes
+  internal: True
+- platform: gpio
+  id: coffe_grinder_button
+  pin: GPIO26
+  restore_mode: ALWAYS_OFF
+  inverted: yes
+  internal: True
+
+- platform: template
+  icon: "mdi:coffee"
+  name: Coffee maker
+  turn_on_action:
+    then:
+      - if:
+          condition:
+            binary_sensor.is_on: coffee_machine_water_sensor
+          then:
+            - logger.log: "There is water in the tank, lets turn on the coffee machine and grinding process!"          
+            - switch.turn_on: coffe_on_button
+            - delay: 0.5s
+            - switch.turn_off: coffe_on_button
+            - delay: 3s
+            - switch.turn_on: coffe_grinder_button
+            - delay: 0.5s
+            - switch.turn_off: coffe_grinder_button
+              
+          else:
+            - logger.log: "Error, no water in the tank, will not star the coffee machine"          
+  turn_off_action:
+   - switch.turn_on: coffe_on_button
+   - delay: 0.5s
+   - switch.turn_off: coffe_on_button
