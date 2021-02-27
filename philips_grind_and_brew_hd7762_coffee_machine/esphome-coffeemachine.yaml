@@ -43,6 +43,7 @@ switch:
   inverted: yes
   internal: True
 
+  #The part bellow will auto populate home assistant if you use it  
 - platform: template
   icon: "mdi:coffee"
   name: Coffee maker
