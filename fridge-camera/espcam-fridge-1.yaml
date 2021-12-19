@@ -1,0 +1,64 @@
+# Creds to by airijia.com
+# ESP32-CAM
+# Lovelace camera card https://github.com/custom-cards/camera-card
+# Video tutorial https://youtu.be/-towjof_ixU
+substitutions:
+  # Modify variables based on your settings
+  hostname: 'espcam_fridge_1'
+esphome:
+  name: $hostname
+  platform: ESP32
+  board: esp32dev
+wifi:
+  ssid: "your wifi ssid"
+  password: "your wifi password"
+  manual_ip:
+    # Set this to the IP of the ESP
+    static_ip: 1.2.3.4
+    # Set this to the IP address of the router. Often ends with .1
+    gateway: 1.2.3.1
+    # The subnet of the network. 255.255.255.0 works for most home networks.
+    subnet: 255.255.255.0
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: "xxxxxxx"
+  reboot_timeout: 0s
+  encryption:
+    #transport encryption, needs Home Assistant 2021.10. and esphome 2021.9
+    #get your own key genereted in your browser through javascript:
+    # https://esphome.io/components/api.html?highlight=encryption
+    key: xxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+
+ota:
+  password: "xxxxxxxxxxxxx"
+
+# ESP32-CAM
+esp32_camera:
+  external_clock:
+    pin: GPIO0
+    frequency: 20MHz
+  i2c_pins:
+    sda: GPIO26
+    scl: GPIO27
+  data_pins: [GPIO5, GPIO18, GPIO19, GPIO21, GPIO36, GPIO39, GPIO34, GPIO35]
+  vsync_pin: GPIO25
+  href_pin: GPIO23
+  pixel_clock_pin: GPIO22
+  power_down_pin: GPIO32
+
+  name: fridge1
+  # ... Frame Settings
+
+# Flashlight
+output:
+  - platform: gpio
+    pin: GPIO4
+    id: gpio_4
+light:
+  - platform: binary
+    output: gpio_4
+    name: $hostname light
+
