@@ -27,7 +27,7 @@ api:
   password: "xxxxxxx"
   reboot_timeout: 0s
   encryption:
-    #transport encryption, needs Home Assistant 2021.10. and esphome 2021.9
+    #transport encryption, needs Home Assistant 2021.10 and esphome 2021.9
     #get your own key genereted in your browser through javascript:
     # https://esphome.io/components/api.html?highlight=encryption
     key: xxxxxxxxxxxxxxxxxxxxxxxxxxxx 
